@@ -1,8 +1,3 @@
-
-
-
-
-
 export const checklistItems = [
   {
     title: "@saptadev",
