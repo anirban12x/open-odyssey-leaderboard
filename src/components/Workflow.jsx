@@ -12,7 +12,7 @@ const Workflow = () => {
   useEffect(() => {
     const fetchGitHubData = async (owner, repo, setContributors) => {
       try {
-        const token = "YOUR_API_KEY"; // Replace with your GitHub token
+        const token = process.env.REACT_APP_GITHUB_TOKEN; // Replace with your GitHub token
         
         const contributorsResponse = await axios.get(
           `https://api.github.com/repos/${owner}/${repo}/contributors`,
