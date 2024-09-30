@@ -53,7 +53,7 @@ const Workflow = () => {
 
   // Function to render a leaderboard for a specific repo
   const renderLeaderboard = (mergedPRs, title) => {
-    const hiddenUsers = ["darkhorse404", "SamarthTech", "anirban12x"];
+    const hiddenUsers = ["darkhorse404", "SamarthTech"];
     const filteredMergedPRs = mergedPRs.filter(pr => !hiddenUsers.includes(pr.login));
 
     return (
