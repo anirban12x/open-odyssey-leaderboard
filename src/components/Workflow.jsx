@@ -12,8 +12,14 @@ const Workflow = () => {
   useEffect(() => {
     const fetchGitHubData = async (owner, repo, setContributors) => {
       try {
-        const token = process.env.REACT_APP_GITHUB_TOKEN; // Replace with your GitHub token
+        // Use import.meta.env for Vite projects, or process.env for Create React App
+        const token = import.meta.env.VITE_GITHUB_TOKEN || process.env.REACT_APP_GITHUB_TOKEN;
         
+        if (!token) {
+          console.error("GitHub token is not set");
+          return;
+        }
+
         const contributorsResponse = await axios.get(
           `https://api.github.com/repos/${owner}/${repo}/contributors`,
           { headers: { Authorization: `token ${token}` } }
