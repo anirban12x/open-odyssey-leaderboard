@@ -4,7 +4,6 @@ import codeImg from "../assets/code.jpg";
 import axios from "axios";
 
 const Workflow = () => {
-  // State to store merged PR counts for each repo
   const [repo1MergedPRs, setRepo1MergedPRs] = useState([]);
   const [repo2MergedPRs, setRepo2MergedPRs] = useState([]);
   const [repo3MergedPRs, setRepo3MergedPRs] = useState([]);
@@ -19,24 +18,24 @@ const Workflow = () => {
           return;
         }
 
-        // Fetch all closed PRs for the repo
         const prsResponse = await axios.get(
           `https://api.github.com/repos/${owner}/${repo}/pulls?state=closed&base=main&per_page=100`,
           { headers: { Authorization: `token ${token}` } }
         );
 
-        // Filter and count merged PRs for each user
         const mergedPRCounts = prsResponse.data.reduce((acc, pr) => {
           if (pr.merged_at) {
             const user = pr.user.login;
-            acc[user] = (acc[user] || 0) + 1;
+            if (!acc[user]) {
+              acc[user] = { count: 0, avatar_url: pr.user.avatar_url };
+            }
+            acc[user].count += 1;
           }
           return acc;
         }, {});
 
-        // Convert to array and sort
         const sortedMergedPRs = Object.entries(mergedPRCounts)
-          .map(([login, count]) => ({ login, count }))
+          .map(([login, data]) => ({ login, ...data }))
           .sort((a, b) => b.count - a.count);
 
         setMergedPRs(sortedMergedPRs);
@@ -45,15 +44,13 @@ const Workflow = () => {
       }
     };
 
-    // Fetch merged PR counts for each repo
     fetchGitHubData("SamarthTech", "web-dev-projects-hacktoberfest24", setRepo1MergedPRs);
     fetchGitHubData("SamarthTech", "python-and-AIML-projects-hacktoberfest24", setRepo2MergedPRs);
     fetchGitHubData("SamarthTech", "low-noncode-projects-hacktoberfest24", setRepo3MergedPRs);
   }, []);
 
-  // Function to render a leaderboard for a specific repo
   const renderLeaderboard = (mergedPRs, title) => {
-    const hiddenUsers = ["darkhorse404", "SamarthTech"];
+    const hiddenUsers = ["darkhorse404", "SamarthTech", "anirban12x"];
     const filteredMergedPRs = mergedPRs.filter(pr => !hiddenUsers.includes(pr.login));
 
     return (
@@ -68,16 +65,24 @@ const Workflow = () => {
               href={`https://github.com/${pr.login}`}
               target="_blank"
               rel="noopener noreferrer"
-              className="flex p-1 pt-1 mb-8 transition-all duration-500 ease-out border-2 rounded-xl hover:border-slate-800 hover:scale-105 border-slate-600 cursor-pointer"
+              className="flex items-center p-3 mb-4 transition-all duration-500 ease-out border-2 rounded-xl hover:border-slate-800 hover:scale-105 border-slate-600 cursor-pointer"
             >
-              <div className="items-center justify-center w-10 h-10 p-2 mx-6 text-purple-400 rounded-full bg-neutral-900">
-                <GitMerge />
+              <div className="flex items-center justify-center w-10 h-10 mr-4 text-2xl font-bold text-purple-400 bg-neutral-900 rounded-full">
+                {index + 1}
               </div>
-              <div>
-                <h5 className="mt-1 mb-2 text-xl">{pr.login}</h5>
-                <p className="text-md text-neutral-500">
+              <img 
+                src={pr.avatar_url} 
+                alt={`${pr.login}'s avatar`} 
+                className="w-12 h-12 mr-4 rounded-full"
+              />
+              <div className="flex-grow">
+                <h5 className="text-xl">{pr.login}</h5>
+                <p className="text-sm text-neutral-500">
                   Merged Pull Requests: {pr.count}
                 </p>
+              </div>
+              <div className="text-purple-400">
+                <GitMerge size={24} />
               </div>
             </a>
           ))
