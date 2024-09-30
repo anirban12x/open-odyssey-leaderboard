@@ -17,14 +17,16 @@ const Workflow = () => {
           console.error("GitHub token is not set");
           return;
         }
-
+    
         const prsResponse = await axios.get(
           `https://api.github.com/repos/${owner}/${repo}/pulls?state=closed&base=main&per_page=100`,
           { headers: { Authorization: `token ${token}` } }
         );
-
+    
         const mergedPRCounts = prsResponse.data.reduce((acc, pr) => {
-          if (pr.merged_at) {
+          // Check if PR is merged and does not have the 'invalid' label
+          const isInvalid = pr.labels.some(label => label.name === "invalid");
+          if (pr.merged_at && !isInvalid) {
             const user = pr.user.login;
             if (!acc[user]) {
               acc[user] = { count: 0, avatar_url: pr.user.avatar_url };
@@ -33,16 +35,17 @@ const Workflow = () => {
           }
           return acc;
         }, {});
-
+    
         const sortedMergedPRs = Object.entries(mergedPRCounts)
           .map(([login, data]) => ({ login, ...data }))
           .sort((a, b) => b.count - a.count);
-
+    
         setMergedPRs(sortedMergedPRs);
       } catch (error) {
         console.error("Error fetching GitHub data", error);
       }
     };
+    
 
     fetchGitHubData("SamarthTech", "web-dev-projects-hacktoberfest24", setRepo1MergedPRs);
     fetchGitHubData("SamarthTech", "python-and-AIML-projects-hacktoberfest24", setRepo2MergedPRs);
