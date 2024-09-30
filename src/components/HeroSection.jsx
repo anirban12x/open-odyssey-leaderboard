@@ -19,7 +19,7 @@ const HeroSection = () => {
         >
           Join our Community
         </a>
-        <a href="https://linktr.ee/SamarthXHacktoberfest24" className="px-4 py-3 mx-3 text-center border rounded-md hover:backdrop-blur-lg transition-all ease-out duration-700 hover:bg-white hover:text-black hover:scale-105">
+        <a href="https://linktr.ee/SamarthXHacktoberfest2024" className="px-4 py-3 mx-3 text-center border rounded-md hover:backdrop-blur-lg transition-all ease-out duration-700 hover:bg-white hover:text-black hover:scale-105">
           Start Contributing
         </a>
       </div>
