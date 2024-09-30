@@ -40,7 +40,7 @@ const Workflow = () => {
   // Function to render a leaderboard for a specific repo
   const renderLeaderboard = (contributors, title) => {
     // Array of usernames to hide
-    const hiddenUsers = ["darkhorse404", "SamarthTech"];
+    const hiddenUsers = ["darkhorse404", "SamarthTech", "anirban12x"];
 
     // Filter out the users you want to hide
     const filteredContributors = contributors.filter(contributor => !hiddenUsers.includes(contributor.login));
