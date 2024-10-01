@@ -1,6 +1,7 @@
 import Navbar from "./components/Navbar";
 import HeroSection from "./components/HeroSection";
 import Workflow from "./components/Workflow";
+import Footer from "./components/Footer";
 
 const App = () => {
   return (
@@ -10,6 +11,7 @@ const App = () => {
         <HeroSection />
         <Workflow />
       </div>
+      <Footer/>
     </>
   );
 };
