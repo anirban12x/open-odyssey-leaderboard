@@ -27,3 +27,7 @@
   border-radius: 4px;
   width: 4px;
 }
+
+.scale-sm:hover{
+  scale: 1.035;
+}

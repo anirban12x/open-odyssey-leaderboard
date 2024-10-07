@@ -4,21 +4,29 @@ import codeImg from "../assets/code.jpg";
 import axios from "axios";
 
 const Workflow = () => {
+
+  const ViewMorePRcount=5
+
   const [repoMergedPRs, setRepoMergedPRs] = useState({
     repo1: [],
     repo2: [],
     repo3: []
   });
   const [overallMergedPRs, setOverallMergedPRs] = useState([]);
+  const [showMore, setShowMore] = useState({
+    repo1: ViewMorePRcount,
+    repo2: ViewMorePRcount,
+    repo3: ViewMorePRcount,
+  });
 
   const fetchGitHubData = async (owner, repo) => {
     try {
-      const token = import.meta.env.VITE_GITHUB_TOKEN || process.env.REACT_APP_GITHUB_TOKEN;
+      const token = import.meta.env.VITE_GITHUB_TOKEN || process.env.REACT_APP_GITHUB_TOKEN ;
 
       if (!token) {
         console.error("GitHub token is not set");
         return [];
-      }
+      } 
 
       const prsResponse = await axios.get(
         `https://api.github.com/repos/${owner}/${repo}/pulls?state=closed&base=main&per_page=100`,
@@ -48,9 +56,9 @@ const Workflow = () => {
 
   useEffect(() => {
     const fetchAllRepoData = async () => {
-      const repo1Data = await fetchGitHubData("SamarthTech", "web-dev-projects-hacktoberfest24");
-      const repo2Data = await fetchGitHubData("SamarthTech", "python-and-AIML-projects-hacktoberfest24");
-      const repo3Data = await fetchGitHubData("SamarthTech", "low-noncode-projects-hacktoberfest24");
+      const repo1Data = await fetchGitHubData("SamarthTech", "web-projects-2024");
+      const repo2Data = await fetchGitHubData("SamarthTech", "python-projects-2024");
+      const repo3Data = await fetchGitHubData("SamarthTech", "noncode-projects-2024");
 
       setRepoMergedPRs({
         repo1: repo1Data,
@@ -86,17 +94,29 @@ const Workflow = () => {
     calculateOverallLeaderboard();
   }, [repoMergedPRs]);
 
-  const renderLeaderboard = (mergedPRs, title, isOverall = false) => {
+  const renderLeaderboard = (mergedPRs, title, isOverall, repoNo) => {
     const hiddenUsers = ["darkhorse404", "SamarthTech", "anirban12x"];
     const filteredMergedPRs = mergedPRs.filter(pr => !hiddenUsers.includes(pr.login));
+
+    var showmoreRepo=null
+    if (repoNo==1)
+      showmoreRepo=showMore.repo1
+    else if (repoNo==2)
+      showmoreRepo=showMore.repo2
+    else if (repoNo==3)
+      showmoreRepo=showMore.repo3
+
+    const displayedPRs = filteredMergedPRs.slice(
+      0, isOverall? ViewMorePRcount: showmoreRepo
+    );
 
     return (
       <div className="w-full p-2 lg:w-1/3">
         <h3 className="mt-6 text-2xl tracking-wide text-center mb-6">{title}</h3>
-        {filteredMergedPRs.length === 0 ? (
+        {displayedPRs.length === 0 ? (
           <p className="text-center text-neutral-500">No Merged Pull Requests...</p>
         ) : (
-          filteredMergedPRs.map((pr, index) => {
+          displayedPRs.map((pr, index) => {
             const borderStyle = isOverall
               ? index === 0
                 ? { border: "2px solid gold" }
@@ -113,7 +133,7 @@ const Workflow = () => {
                 href={`https://github.com/${pr.login}`}
                 target="_blank"
                 rel="noopener noreferrer"
-                className={`flex items-center p-3 mb-4 transition-all duration-500 ease-out border-2 border-slate-600 rounded-xl hover:border-slate-800 hover:scale-105 cursor-pointer`}
+                className={`w-full flex items-center p-3 mb-4 transition-all duration-500 ease-out border-2 border-slate-600 rounded-xl hover:border-slate-800 scale-sm cursor-pointer`}
                 style={borderStyle}
               >
                 <div className="flex items-center justify-center w-10 h-10 mr-4 text-2xl font-bold text-purple-400 bg-neutral-900 rounded-full">
@@ -124,7 +144,7 @@ const Workflow = () => {
                   alt={`${pr.login}'s avatar`}
                   className="w-12 h-12 mr-4 rounded-full"
                 />
-                <div className="flex-grow">
+                <div className="flex-grow flex-shrink">
                   <h5 className="text-xl">{pr.login}</h5>
                   <p className="text-sm text-neutral-500">
                     Merged Pull Requests: {pr.count}
@@ -136,6 +156,32 @@ const Workflow = () => {
               </a>
             );
           })
+        )}
+        {filteredMergedPRs.length > ViewMorePRcount && ( 
+          <div className="w-full flex flex-row justify-center items-center mt-6 mb-2"><button
+            className="inline-block border-b-2 border-white-500 w-max text-center text-white-500 hover:text-purple-400 hover:border-purple-400 transition-all duration-100 ease-in"
+            onClick={() => {
+              //const showMoreCount=showMore
+              //showMoreCount[repoNo]= showMoreCount[repoNo]>=filteredMergedPRs.length?showMoreCount[repoNo]-ViewMorePRcount:showMoreCount[repoNo]+ViewMorePRcount
+              if (repoNo==1) {
+                setShowMore({
+                  ...showMore,
+                  repo1: showMore.repo1>=filteredMergedPRs.length?showMore.repo1-ViewMorePRcount:showMore.repo1+ViewMorePRcount,
+                });
+              } else if(repoNo==2){
+                setShowMore({
+                  ...showMore,
+                  repo2: showMore.repo2>=filteredMergedPRs.length?showMore.repo2-ViewMorePRcount:showMore.repo2+ViewMorePRcount,
+                });
+              } else if(repoNo==3){
+                setShowMore({
+                  ...showMore,
+                  repo3: showMore.repo3>=filteredMergedPRs.length?showMore.repo3-ViewMorePRcount:showMore.repo3+ViewMorePRcount,
+              })}
+            }} 
+          >
+            {showmoreRepo>=filteredMergedPRs.length ? "Show Less" : "View More"}
+          </button></div>
         )}
       </div>
     );
@@ -162,9 +208,9 @@ const Workflow = () => {
       </div>
 
       <div className="flex flex-wrap justify-center mt-12">
-        {renderLeaderboard(repoMergedPRs.repo1, "Web Dev Projects")}
-        {renderLeaderboard(repoMergedPRs.repo2, "Python and AIML Projects")}
-        {renderLeaderboard(repoMergedPRs.repo3, "Low-non Code Projects")}
+        {renderLeaderboard(repoMergedPRs.repo1, "Web Dev Projects",false , 1)}
+        {renderLeaderboard(repoMergedPRs.repo2, "Python and AIML Projects",false , 2)}
+        {renderLeaderboard(repoMergedPRs.repo3, "Low-non Code Projects", false, 3)}
       </div>
     </div>
   );
