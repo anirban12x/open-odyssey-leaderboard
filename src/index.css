@@ -31,3 +31,7 @@
 .scale-sm:hover{
   scale: 1.035;
 }
+
+.custom-word-wrap{
+  overflow-wrap: break-word;
+}
