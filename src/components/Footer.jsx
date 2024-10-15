@@ -80,7 +80,7 @@ const Footer = () => {
 
   return (
     <footer
-      className="bg-[#101010] text-gray-300 py-10 px-12 mt-20 
+      className="bg-[#101010] text-gray-300 py-10 px-12 mt-16 
     border-t-2 border-t-purple-600"
     >
       <div className="container mx-auto px-5 pt-3">
@@ -100,7 +100,7 @@ const Footer = () => {
                 </h4>
                 <div className="flex space-x-4">
                   {FooterLinkData.socials.map((item) => (
-                    <a href={item.link} className="hover:text-red-400">
+                    <a href={item.link} className="hover:text-red-400 transition-all duration-100 ease-in">
                       <i className={item.icon}></i>
                     </a>
                   ))}
@@ -118,7 +118,7 @@ const Footer = () => {
               <ul className="space-y-2">
                 {FooterLinkData.about.map((item) => (
                   <li>
-                    <a href={item.link} className="hover:text-red-400">
+                    <a href={item.link} className="hover:text-red-400 transition-all duration-100 ease-in">
                       {item.text}
                     </a>
                   </li>
@@ -136,7 +136,7 @@ const Footer = () => {
               <ul className="space-y-2">
                 {FooterLinkData.gethelp.map((item) => (
                   <li>
-                    <a href={item.link} className="hover:text-red-400">
+                    <a href={item.link} className="hover:text-red-400 transition-all duration-100 ease-in">
                       {item.text}
                     </a>
                   </li>
@@ -154,7 +154,7 @@ const Footer = () => {
               <ul className="space-y-2">
                 {FooterLinkData.resources.map((item) => (
                   <li>
-                    <a href={item.link} className="hover:text-red-400">
+                    <a href={item.link} className="hover:text-red-400 transition-all duration-100 ease-in">
                       {item.text}
                     </a>
                   </li>

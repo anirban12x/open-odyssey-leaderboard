@@ -23,7 +23,7 @@ const Workflow = () => {
   const fetchGitHubData = async (owner, repo) => {
     try {
       const token = import.meta.env.VITE_GITHUB_TOKEN || process.env.REACT_APP_GITHUB_TOKEN ;
-
+      
       if (!token) {
         console.error("GitHub token is not set");
         return [];
@@ -195,43 +195,70 @@ const Workflow = () => {
           })
         )}
         {filteredMergedPRs.length > ViewMorePRcount && (
-          <div className="w-full flex flex-row justify-center items-center mt-6 mb-2">
-            <button
-              className="inline-block border-b-2 border-white-500 w-max text-center text-white-500 px-0 hover:px-4 hover:text-purple-400 hover:border-purple-400 transition-all duration-100 ease-in"
-              onClick={() => {
-                //const showMoreCount=showMore
-                //showMoreCount[repoNo]= showMoreCount[repoNo]>=filteredMergedPRs.length?showMoreCount[repoNo]-ViewMorePRcount:showMoreCount[repoNo]+ViewMorePRcount
-                if (repoNo == 1) {
-                  setShowMore({
-                    ...showMore,
-                    repo1:
-                      showMore.repo1 >= filteredMergedPRs.length
-                        ? showMore.repo1 - ViewMorePRcount
-                        : showMore.repo1 + ViewMorePRcount,
-                  });
-                } else if (repoNo == 2) {
-                  setShowMore({
-                    ...showMore,
-                    repo2:
-                      showMore.repo2 >= filteredMergedPRs.length
-                        ? showMore.repo2 - ViewMorePRcount
-                        : showMore.repo2 + ViewMorePRcount,
-                  });
-                } else if (repoNo == 3) {
-                  setShowMore({
-                    ...showMore,
-                    repo3:
-                      showMore.repo3 >= filteredMergedPRs.length
-                        ? showMore.repo3 - ViewMorePRcount
-                        : showMore.repo3 + ViewMorePRcount,
-                  });
-                }
-              }}
-            >
-              {showmoreRepo >= filteredMergedPRs.length
-                ? "Show Less"
-                : "View More"}
-            </button>
+          <div className="w-full flex flex-col justify-center items-center mt-6 mb-5">
+            <div className="w-full text-center text-neutral-500 text-sm">
+              Showing{" "}
+              {repoNo == 1 ? (
+                <p className="inline-block">
+                  {showMore.repo1 > filteredMergedPRs.length
+                    ? filteredMergedPRs.length
+                    : showMore.repo1}
+                </p>
+              ) : repoNo == 2 ? (
+                <p className="inline-block">
+                  {showMore.repo2 > filteredMergedPRs.length
+                    ? filteredMergedPRs.length
+                    : showMore.repo2}
+                </p>
+              ) : repoNo == 3 ? (
+                <p className="inline-block">
+                  {showMore.repo3 > filteredMergedPRs.length
+                    ? filteredMergedPRs.length
+                    : showMore.repo3}
+                </p>
+              ) : (
+                <></>
+              )}{" "}
+              out of {filteredMergedPRs.length}
+            </div>
+            <div className="w-full flex flex-row justify-center items-center mt-4">
+              <button
+                className="inline-block border-b-2 border-white-500 w-max text-center text-white-500 px-0 hover:px-4 hover:text-purple-400 hover:border-purple-400 transition-all duration-100 ease-in"
+                onClick={() => {
+                  //const showMoreCount=showMore
+                  //showMoreCount[repoNo]= showMoreCount[repoNo]>=filteredMergedPRs.length?showMoreCount[repoNo]-ViewMorePRcount:showMoreCount[repoNo]+ViewMorePRcount
+                  if (repoNo == 1) {
+                    setShowMore({
+                      ...showMore,
+                      repo1:
+                        showMore.repo1 >= filteredMergedPRs.length
+                          ? showMore.repo1 - ViewMorePRcount
+                          : showMore.repo1 + ViewMorePRcount,
+                    });
+                  } else if (repoNo == 2) {
+                    setShowMore({
+                      ...showMore,
+                      repo2:
+                        showMore.repo2 >= filteredMergedPRs.length
+                          ? showMore.repo2 - ViewMorePRcount
+                          : showMore.repo2 + ViewMorePRcount,
+                    });
+                  } else if (repoNo == 3) {
+                    setShowMore({
+                      ...showMore,
+                      repo3:
+                        showMore.repo3 >= filteredMergedPRs.length
+                          ? showMore.repo3 - ViewMorePRcount
+                          : showMore.repo3 + ViewMorePRcount,
+                    });
+                  }
+                }}
+              >
+                {showmoreRepo >= filteredMergedPRs.length
+                  ? "Show Less"
+                  : "View More"}
+              </button>
+            </div>
           </div>
         )}
       </div>
